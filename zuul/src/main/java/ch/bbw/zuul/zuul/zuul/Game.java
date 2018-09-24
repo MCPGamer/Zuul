@@ -1,5 +1,9 @@
 package ch.bbw.zuul.zuul.zuul;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  *  This class is the main class of the "World of Zuul" application. 
  *  "World of Zuul" is a very simple, text based adventure game.  Users 
@@ -21,6 +25,7 @@ public class Game
 {
     private Parser parser;
     private Room currentRoom;
+    private boolean wantToQuit;
         
     /**
      * Create the game and initialise its internal map.
@@ -37,20 +42,28 @@ public class Game
     private void createRooms()
     {
         Room outside, theatre, pub, lab, office;
+        Exit ausgang, theatreExit, pubExit, labExit, officeExit;
       
         // create the rooms
-        outside = new Room("outside the main entrance of the university");
-        theatre = new Room("in a lecture theatre");
-        pub = new Room("in the campus pub");
-        lab = new Room("in a computing lab");
-        office = new Room("in the computing admin office");
+        outside = new Room("outside the main entrance of the university", "Ausgang");
+        theatre = new Room("in a lecture theatre", "Theatre");
+        pub = new Room("in the campus pub", "Pub");
+        lab = new Room("in a computing lab", "Lab");
+        office = new Room("in the computing admin office", "Office");
+        
+        // create Exits
+        ausgang = new Exit(outside, "VillageCenter");
+        theatreExit = new Exit(theatre, "TheatreDoor");
+        pubExit = new Exit(pub, "PubDoor");
+        labExit = new Exit(lab, "LabDoor");
+        officeExit = new Exit(office, "OfficeDoor");
         
         // initialise room exits
-        outside.setExits(null, theatre, lab, pub);
-        theatre.setExits(null, null, null, outside);
-        pub.setExits(null, outside, null, null);
-        lab.setExits(outside, office, null, null);
-        office.setExits(null, null, null, lab);
+        outside.setExits(new ArrayList<Exit>(Arrays.asList(theatreExit, labExit, pubExit, new Exit())));
+        theatre.setExits(new ArrayList<Exit>(Arrays.asList(ausgang)));
+        pub.setExits(new ArrayList<Exit>(Arrays.asList(ausgang)));
+        lab.setExits(new ArrayList<Exit>(Arrays.asList(ausgang, officeExit)));
+        office.setExits(new ArrayList<Exit>(Arrays.asList(labExit)));
 
         currentRoom = outside;  // start game outside
     }
@@ -85,14 +98,12 @@ public class Game
         System.out.println();
         System.out.println("You are " + currentRoom.getDescription());
         System.out.print("Exits: ");
-        if(currentRoom.northExit != null)
-            System.out.print("north ");
-        if(currentRoom.eastExit != null)
-            System.out.print("east ");
-        if(currentRoom.southExit != null)
-            System.out.print("south ");
-        if(currentRoom.westExit != null)
-            System.out.print("west ");
+
+        List<Exit> exits = currentRoom.getExits();
+        for(Exit exit : exits) {
+        	System.out.print(exit.getName() + " ");
+        }
+        
         System.out.println();
     }
 
@@ -103,7 +114,7 @@ public class Game
      */
     private boolean processCommand(Command command) 
     {
-        boolean wantToQuit = false;
+        wantToQuit = false;
 
         if(command.isUnknown()) {
             System.out.println("I don't know what you mean...");
@@ -153,29 +164,27 @@ public class Game
 
         // Try to leave current room.
         Room nextRoom = null;
-        if(direction.equals("north"))
-            nextRoom = currentRoom.northExit;
-        if(direction.equals("east"))
-            nextRoom = currentRoom.eastExit;
-        if(direction.equals("south"))
-            nextRoom = currentRoom.southExit;
-        if(direction.equals("west"))
-            nextRoom = currentRoom.westExit;
+        Exit exit = currentRoom.findExitByName(direction);
+        if(exit != null) {
+        	nextRoom = exit.getNextRoom();
+        }
+        
 
-        if (nextRoom == null)
+        if(exit.getNextRoom() == null) { // If you went to Outside of the Bounds there is no way back and u lose
+        	System.out.println("You have left the Map and so you Lost the Game!");
+        	this.wantToQuit = true;
+        } else if (nextRoom == null) {
             System.out.println("There is no door!");
-        else {
+        } else {
             currentRoom = nextRoom;
             System.out.println("You are " + currentRoom.getDescription());
             System.out.print("Exits: ");
-            if(currentRoom.northExit != null)
-                System.out.print("north ");
-            if(currentRoom.eastExit != null)
-                System.out.print("east ");
-            if(currentRoom.southExit != null)
-                System.out.print("south ");
-            if(currentRoom.westExit != null)
-                System.out.print("west ");
+           
+            List<Exit> exits = currentRoom.getExits();
+            for(Exit e : exits) {
+            	System.out.print(e.getName() + " ");
+            }
+            
             System.out.println();
         }
     }

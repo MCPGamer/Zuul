@@ -1,5 +1,8 @@
 package ch.bbw.zuul.zuul.zuul;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /*
  * Class Room - a room in an adventure game.
  *
@@ -17,45 +20,91 @@ package ch.bbw.zuul.zuul.zuul;
 
 public class Room 
 {
-    public String description;
-    public Room northExit;
-    public Room southExit;
-    public Room eastExit;
-    public Room westExit;
+    private String description;
+    private String roomName;
+    private List<Exit> exits;
 
     /**
      * Create a room described "description". Initially, it has
      * no exits. "description" is something like "a kitchen" or
      * "an open court yard".
      */
-    public Room(String description) 
+    public Room(String description, String roomName) 
     {
         this.description = description;
+        this.roomName = roomName;
+        exits = new ArrayList<>();
     }
 
     /**
-     * Define the exits of this room.  Every direction either leads
-     * to another room or is null (no exit there).
-     */
-    public void setExits(Room north, Room east, Room south, Room west) 
-    {
-        if(north != null)
-            northExit = north;
-        if(east != null)
-            eastExit = east;
-        if(south != null)
-            southExit = south;
-        if(west != null)
-            westExit = west;
-    }
-
-    /**
-     * Return the description of the room (the one that was defined
-     * in the constructor).
+     * Return the description of the room;
      */
     public String getDescription()
     {
         return description;
     }
-
+    
+    /**
+     * Sets Description of the room
+     * @param description
+     */
+    public void setDescription(String description) {
+    	this.description = description;
+    }
+    
+    /**
+     * Return the Name of the room;
+     */
+    public String getRoomName()
+    {
+        return roomName;
+    }
+    
+    /**
+     * Sets Name of the room
+     * @param roomName
+     */
+    public void setRoomName(String roomName) {
+    	this.roomName = roomName;
+    }
+    
+    /**
+     * Clears exits and sets attribute with new List
+     * @param exits new Exitlist;
+     */
+    public void setExits(List<Exit> exits) 
+    {
+        this.exits.clear();
+        this.exits.addAll(exits);
+    }
+    
+    /**
+     * Returns Exits
+     * @return List<Exit>
+     */
+    public List<Exit> getExits() {
+    	return exits;
+    }
+    
+    /**
+     * Adds an exit to the exits
+     * @param exit
+     */
+    public void addExit(Exit exit) {
+    	exits.add(exit);
+    }
+    
+    /**
+     * returns Exit with the given Name. If no Exit is found Null is returned
+     * @param name
+     * @return Exit
+     */
+    public Exit findExitByName(String name) {
+    	for(Exit exit: exits) {
+    		if(exit.getName().equals(name)) {
+    			return exit;
+    		}
+    	}
+		return null;
+    }
 }
