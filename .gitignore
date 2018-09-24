@@ -6,6 +6,7 @@ gen/
 .gradle/
 zuul/bin/
 zuul/mvnw
+zuul/.mvn/
 local.properties
 .classpath
 .project
