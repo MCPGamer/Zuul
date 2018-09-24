@@ -1,5 +1,33 @@
+### Builder
+target/
+build/
+out/
+gen/
+.gradle/
+zuul/bin/
+zuul/mvnw
+local.properties
 .classpath
 .project
 .settings
 .metadata
-target/
+
+### Eclipse
+.settings/
+.project
+.classpath
+.mymetadata
+
+### Package Files
+*.jar
+*.war
+*.ear
+
+### Other
+.DS_Store
+*.log
+*.bak
+*.bat
+*.xml
+*.xsd
+*.cmd
