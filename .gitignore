@@ -29,6 +29,5 @@ local.properties
 *.log
 *.bak
 *.bat
-*.xml
 *.xsd
 *.cmd
