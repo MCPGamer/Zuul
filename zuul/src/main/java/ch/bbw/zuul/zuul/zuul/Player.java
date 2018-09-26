@@ -43,7 +43,7 @@ public class Player {
 		} else if(this.playerType.equals(PlayerType.BlackSmith)) { // the BlackSmith
 			this.goldAmount = 0;
 			this.stamina = 0;
-			this.maxLife = 0;
+			this.maxStamina = 0;
 			this.life = 0;
 			this.maxLife = 0;
 			
@@ -57,13 +57,13 @@ public class Player {
 		} else if(this.playerType.equals(PlayerType.MotelOwner)) { // the MotelOwner
 			this.goldAmount = 0;
 			this.stamina = 0;
-			this.maxLife = 0;
+			this.maxStamina = 0;
 			this.life = 0;
 			this.maxLife = 0;
 		} else if(this.playerType.equals(PlayerType.MotelOwner)) { // the Enemy
 			this.goldAmount = 20;
-			this.stamina = 10000;
-			this.maxLife = 10000;
+			this.stamina = 0;
+			this.maxStamina = 0;
 			this.life = 35;
 			this.maxLife = 35;
 			
@@ -72,8 +72,8 @@ public class Player {
 			inventory.addAll(Arrays.asList(heavySword));
 		} else if(this.playerType.equals(PlayerType.MotelOwner)) { // the Boss
 			this.goldAmount = 0;
-			this.stamina = 1000000;
-			this.maxLife = 1000000;
+			this.stamina = 0;
+			this.maxStamina = 0;
 			this.life = 75;
 			this.maxLife = 75;
 			

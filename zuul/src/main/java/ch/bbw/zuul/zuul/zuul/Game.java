@@ -160,13 +160,13 @@ public class Game
         	wantToQuit = quit(command);
         } else if (commandWord.equals("buy")) {
         	if(currentRoom.getRoomName().equals("Armory")) {
-        		// TODO: impl. BUY
+        		buy(command);
         	} else {
         		System.out.println("Cant buy unless you're in the Armory");
         	}
         }  else if (commandWord.equals("sleep")) {
         	if(currentRoom.getRoomName().equals("Motel")) {
-        		// TODO: impl. SLEEP
+        		sleep(command);
         	} else {
         		System.out.println("Cant sleep unless you're in the Motel");
         	}
@@ -178,7 +178,7 @@ public class Game
         	}
         }  else if (commandWord.equals("attack")) {
         	if(currentRoom.getRoomName().equals("EnemyRoom") || currentRoom.getRoomName().equals("BossRoom")) {
-        		// TODO: impl. ATTACK
+        		attack(command);
         	} else {
         		System.out.println("Cant attack unless you're in the EnemyRoom or BossRoom");
         	}
@@ -258,11 +258,32 @@ public class Game
             	System.out.println("To Hunt type \"hunt <WeaponName>\"");
             	System.out.println();
             } else if(currentRoom.getRoomName().equals("Motel")) {
-            	//TODO: impl;
+            	System.out.println("You Currently have " + player.getGoldAmount() + " Gold and have " + player.getStamina() + "/" + player.getMaxStamina() + " Stamina Left.");
+            	System.out.println();
+            	System.out.println("Do you wanna Nap to restore Stamina or Rest for 5 Gold to Restore Life and Stamina?");
+            	System.out.println();
+            	System.out.println("To Sleep type \"sleep <Nap/Rest>\"");
+            	System.out.println();
             } else if(currentRoom.getRoomName().equals("Armory")) {
-            	//TODO: impl;
+            	System.out.println("You Currently have " + player.getGoldAmount() + " Gold and have " + player.getStamina() + "/" + player.getMaxStamina() + " Stamina Left.");
+            	System.out.println();
+            	System.out.println("List of Weapons in the Armory ");
+            	for(Weapon w : blackSmith.getInventory()) {
+            			System.out.println("\t " + w.getName() + "(Stamina Cost: " + w.getStaminaCost() + ", MinDamage: " + w.getMinDamage() + ", MaxDamage: " + w.getMaxDamage() + ") Price: " + w.getValue());
+            	}
+            	System.out.println();
+            	System.out.println("To Buy type \"buy <WeaponName>\"");
+            	System.out.println();
             } else if(currentRoom.getRoomName().equals("EnemyRoom") || currentRoom.getRoomName().equals("BossRoom")) {
-            	//TODO: impl;
+            	System.out.println("You Currently have " + player.getGoldAmount() + " Gold and have " + player.getStamina() + "/" + player.getMaxStamina() + " Stamina Left.");
+            	System.out.println();
+            	System.out.println("List of Weapons in your Inventory: ");
+            	for(Weapon w : player.getInventory()) {
+            			System.out.println("\t " + w.getName() + "(Stamina Cost: " + w.getStaminaCost() + ", MinDamage: " + w.getMinDamage() + ", MaxDamage: " + w.getMaxDamage() + ")");
+            	}
+            	System.out.println();
+            	System.out.println("To Attack type \"attack <WeaponName>\"");
+            	System.out.println();
             }
         }
     }
@@ -297,14 +318,135 @@ public class Game
     	}
     	
     	if(weapon != null) {
-    		if(player.getStamina() >= weapon.getStaminaCost()) {   			
+    		if(player.getStamina() >= weapon.getStaminaCost()) { 
+    			// Random Damage and Random amount of Money trough that
     			int damage = player.calculateDamage(weapon);
     			int wonGold = (int) (damage * 1.5);
     			
     			player.setStamina(player.getStamina() - weapon.getStaminaCost());
     			player.setGoldAmount(player.getGoldAmount() + wonGold);
-    			System.out.println("You Hunt Some Animals with your" + command.getSecondWord() + " and get " + wonGold + " gold"); // TODO: impl
-    			System.out.println("You're now at " + player.getGoldAmount() + " Gold and have " + player.getStamina() + "/" + player.getMaxStamina() + " Stamina Left.");
+    			System.out.println("You Hunt Some Animals with your" + command.getSecondWord() + " and get " + wonGold + " gold");
+    			System.out.println("You're now at " + player.getGoldAmount() + " Gold and have " + player.getStamina() + "/" + player.getMaxStamina() + " Stamina and have " + player.getLife() + "/" + player.getMaxLife() + " Life Left." );
+    		} else {
+    			System.out.println("You're too Tired to Hunt, go to the Motel and Sleep!");
+    		}
+    	} else {
+    		System.out.println("Hunt with What?");
+    	}
+    }
+    
+    /**
+     * Used in the Motel, Restores either Stamina or both Stamina and Life for 5 Gold
+     * @param command
+     */
+    private void sleep(Command command) {
+    	 if(command.hasSecondWord()) {
+    		 // Nap for Stamina
+    		 if(command.getSecondWord().equals("Nap")) {
+    			 System.out.println("You Nap and Restore your Stamina");
+    			 player.setStamina(player.getMaxStamina());
+    			 System.out.println("You're now at " + player.getGoldAmount() + " Gold and have " + player.getStamina() + "/" + player.getMaxStamina() + " Stamina Left.");
+    		 } else if (command.getSecondWord().equals("Rest")) { // Rest for Life aswell as Stamina, Costs 5 which go to the MotelOwner and MotelOwner's Money is only for Stats calculation
+    			 if(player.getGoldAmount() >= 5) {
+	    			 System.out.println("You Rest and Restore your Stamina aswell as your Life");
+	    			 player.setStamina(player.getMaxStamina());
+	    			 player.setLife(player.getMaxLife());
+	    			 player.setGoldAmount(player.getGoldAmount() - 5);
+	    			 motelOwner.setGoldAmount(motelOwner.getGoldAmount() + 5);
+	    			 System.out.println("You're now at " + player.getGoldAmount() + " Gold and have " + player.getStamina() + "/" + player.getMaxStamina() + " Stamina Left.");
+    			 } else {
+    				 System.out.println("You dont have 5 Gold so you can't Rest");
+    			 } 
+    		 } else {
+    			 System.out.println("That Kind of Sleep wasn't Found");
+    		 }
+    	 } else {
+    		 System.out.println("Sleep Rest or Sleep Nap");
+    	 }
+    }
+    
+    /**
+     * Buy Items from Blacksmith in the Armory, Price is the Weapons Value
+     * @param command
+     */
+    private void buy(Command command) {
+    	Weapon weapon = null;
+    	
+    	// Check if BlackSmith has Weapon 
+    	for(Weapon w : blackSmith.getInventory()) {
+    		if(w.getName().equals(command.getSecondWord())) {
+    			weapon = w;
+    		}
+    	}
+    	
+    	if(weapon != null) {// Buy the Weapon you chose and take it from BlackSmiths Inventory, give him the Money for Stats calculation
+    		if(player.getGoldAmount() >= weapon.getValue()) { 
+    			System.out.println("You buy " + weapon.getName());
+    			blackSmith.getInventory().remove(weapon);
+    			blackSmith.setGoldAmount(blackSmith.getGoldAmount() + weapon.getValue());
+    			player.getInventory().add(weapon);
+    			player.setGoldAmount(player.getGoldAmount() - weapon.getValue());
+    			System.out.println("You're now at " + player.getGoldAmount() + " Gold and have " + player.getStamina() + "/" + player.getMaxStamina() + " Stamina and have " + player.getLife() + "/" + player.getMaxLife() + " Life Left." );
+    		} else {
+    			System.out.println("You Don't have enough money to buy this");
+    		}
+    	} else {
+    		System.out.println("Buy What?");
+    	}
+    }
+    
+    /**
+     * Attack an Enemy, Gives Damage to you and to Him but also uses Stamina
+     * @param command
+     */
+    private void attack(Command command) {
+    	Weapon weapon = null;
+    	
+    	// Check if Player has Weapon 
+    	for(Weapon w : player.getInventory()) {
+    		if(w.getName().equals(command.getSecondWord())) {
+    			weapon = w;
+    		}
+    	}
+    	
+    	if(weapon != null) {
+    		if(player.getStamina() >= weapon.getStaminaCost()) { 
+    			// Random Damage and Random amount of Money trough that
+    			int damage = player.calculateDamage(weapon); // Calc your Damage and use Stamina
+    			player.setStamina(player.getStamina() - weapon.getStaminaCost());
+
+    			if(currentRoom.getRoomName().equals("EnemyRoom")) { 
+    				if((enemy.getLife() - damage)  >= 0) {
+    					enemy.setLife(enemy.getLife() - damage);// Enemy takes Damage
+    					int damageTaken = enemy.calculateDamage(enemy.getInventory().get(0));
+    					if((player.getLife() - damageTaken)  >= 0) { // Take Damage
+    						player.setLife(player.getLife() - damageTaken);    						
+    					} else {
+    						System.out.println("The Enemy killed you. GG");// Died and Lost
+    						wantToQuit = true;
+    					}
+    				} else {
+    					System.out.println("You Killed the Enemy and won his Weapon and his Gold"); // Killed the Enemy and got WeaponDrop
+    					player.getInventory().add(enemy.getInventory().get(0));
+    					player.setGoldAmount(player.getGoldAmount() + enemy.getGoldAmount());
+    				}
+    			} else if(currentRoom.getRoomName().equals("BossRoom")) { 
+    				if((boss.getLife() - damage)  >= 0) {
+    					boss.setLife(boss.getLife() - damage);// Boss takes Damage
+    					int damageTaken = boss.calculateDamage(boss.getInventory().get(0));
+    					if((boss.getLife() - damageTaken)  >= 0) { // Take Damage
+    						boss.setLife(boss.getLife() - damageTaken);    						
+    					} else {
+    						System.out.println("The Boss killed you. GG");// Died and Lost
+    						wantToQuit = true;
+    					}
+    				} else {
+    					System.out.println("You Killed the Boss and won the Game. GG!"); // Killed the Boss and Won
+						wantToQuit = true;
+    				}
+    			}
+    			
+    			System.out.println("You're now at " + player.getGoldAmount() + " Gold and have " + player.getStamina() + "/" + player.getMaxStamina() + " Stamina and have " + player.getLife() + "/" + player.getMaxLife() + " Life Left." );
     		} else {
     			System.out.println("You're too Tired to Hunt, go to the Motel and Sleep!");
     		}
