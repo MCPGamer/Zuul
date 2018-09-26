@@ -27,6 +27,7 @@ local.properties
 ### Other
 .DS_Store
 *.log
+*.xml
 *.bak
 *.bat
 *.xsd
