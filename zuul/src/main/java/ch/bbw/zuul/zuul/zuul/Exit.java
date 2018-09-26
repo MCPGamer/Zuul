@@ -16,7 +16,7 @@ public class Exit {
 	 * Default Constructor sends you to nowhere
 	 */
 	public Exit() {
-		name = "Outside";
+		name = "ExitVillage";
 	}
 
 	public String getName() {
