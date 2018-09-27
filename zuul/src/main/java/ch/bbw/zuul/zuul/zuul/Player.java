@@ -60,7 +60,8 @@ public class Player {
 			this.maxStamina = 0;
 			this.life = 0;
 			this.maxLife = 0;
-		} else if(this.playerType.equals(PlayerType.MotelOwner)) { // the Enemy
+			
+		} else if(this.playerType.equals(PlayerType.Enemy)) { // the Enemy
 			this.goldAmount = 20;
 			this.stamina = 0;
 			this.maxStamina = 0;
@@ -70,7 +71,7 @@ public class Player {
 			Weapon heavySword = new Weapon("HeavySword", "A Strong Sword", 4, 4, 3, 0);
 			
 			inventory.addAll(Arrays.asList(heavySword));
-		} else if(this.playerType.equals(PlayerType.MotelOwner)) { // the Boss
+		} else if(this.playerType.equals(PlayerType.Boss)) { // the Boss
 			this.goldAmount = 0;
 			this.stamina = 0;
 			this.maxStamina = 0;

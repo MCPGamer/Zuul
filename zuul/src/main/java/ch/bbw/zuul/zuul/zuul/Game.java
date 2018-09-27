@@ -419,6 +419,7 @@ public class Game
     				if((enemy.getLife() - damage)  >= 0) {
     					enemy.setLife(enemy.getLife() - damage);// Enemy takes Damage
     					int damageTaken = enemy.calculateDamage(enemy.getInventory().get(0));
+    					System.out.println("You've done " + damage + " damage, the Enemy is now at " + enemy.getLife() + "/" + enemy.getMaxLife() + " life");
     					if((player.getLife() - damageTaken)  >= 0) { // Take Damage
     						player.setLife(player.getLife() - damageTaken);    						
     					} else {
