@@ -435,7 +435,8 @@ public class Game
     				if((boss.getLife() - damage)  >= 0) {
     					boss.setLife(boss.getLife() - damage);// Boss takes Damage
     					int damageTaken = boss.calculateDamage(boss.getInventory().get(0));
-    					if((boss.getLife() - damageTaken)  >= 0) { // Take Damage
+     					System.out.println("You've done " + damage + " damage, the Boss is now at " + boss.getLife() + "/" + boss.getMaxLife() + " life");
+						if((boss.getLife() - damageTaken)  >= 0) { // Take Damage
     						boss.setLife(boss.getLife() - damageTaken);    						
     					} else {
     						System.out.println("The Boss killed you. GG");// Died and Lost
