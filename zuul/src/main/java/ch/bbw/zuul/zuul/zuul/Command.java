@@ -11,9 +11,9 @@ package ch.bbw.zuul.zuul.zuul;
  * 
  * The way this is used is: Commands are already checked for being valid
  * command words. If the user entered an invalid command (a word that is not
- * known) then the command word is <null>.
+ * known) then the command word is null.
  *
- * If the command had only one word, then the second word is <null>.
+ * If the command had only one word, then the second word is null.
  * 
  * @author  Michael Kolling and David J. Barnes
  * @version 1.0 (February 2002)

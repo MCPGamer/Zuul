@@ -143,6 +143,8 @@ public class Game
      * Given a command, process (that is: execute) the command.
      * If this command ends the game, true is returned, otherwise false is
      * returned.
+     * @param command
+     * @return boolean does player want to quit
      */
     private boolean processCommand(Command command) 
     {
@@ -296,6 +298,8 @@ public class Game
      * "Quit" was entered. Check the rest of the command to see
      * whether we really quit the game. Return true, if this command
      * quits the game, false otherwise.
+     * @param command
+     * @return does player want to quit
      */
     private boolean quit(Command command) 
     {
