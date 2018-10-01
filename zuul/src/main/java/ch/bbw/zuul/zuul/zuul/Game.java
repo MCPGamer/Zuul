@@ -431,12 +431,13 @@ public class Game
     						wantToQuit = true;
     					}
     				} else {
-    					System.out.println("You Killed the Enemy and won his Weapon and his Gold"); // Killed the Enemy and got WeaponDrop
+    					System.out.println("You Killed the Enemy and won his Weapon and his Gold"); // Killed the Enemy and got WeaponDrop, Set BossRoom Entrance
     					player.getInventory().add(enemy.getInventory().get(0));
     					player.setGoldAmount(player.getGoldAmount() + enemy.getGoldAmount());
     					currentRoom.setDescription("just passed the Opening where you've slain the Enemy and a Tunnel Opens in front of you.");
     					Exit tunnel = new Exit(bossRoom, "Tunnel");
     					currentRoom.addExit(tunnel);
+    					enemy.setLife(0);
     				}
     			} else if(currentRoom.getRoomName().equals("BossRoom")) { 
     				if((boss.getLife() - damage)  > 0) {
