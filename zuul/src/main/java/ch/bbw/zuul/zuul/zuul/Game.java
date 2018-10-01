@@ -29,6 +29,8 @@ public class Game
     
     // The Different Characters in the Game
     private Player player, blackSmith, motelOwner, enemy, boss;
+    // Needed for unlocking later on
+    private Room bossRoom;
         
     /**
      * Create the game and initialise its internal map.
@@ -48,7 +50,7 @@ public class Game
      */
     private void createRooms()
     {
-        Room armory, motel, forest, villageCenter, caveOpening, enemyRoom, bossRoom;
+        Room armory, motel, forest, villageCenter, caveOpening, enemyRoom;
         Exit armoryDoor, armoryDoorBack, motelDoor, motelDoorBack, dirtRoad, dirtRoadBack, stoneRoad, mainRoad, mainRoadBack, exitVillage, caveEntrance, caveEntranceBack, tunnelBack;
       
         // create the rooms
@@ -248,7 +250,7 @@ public class Game
             
             // Show special Room Texts / Commands
             if(currentRoom.getRoomName().equals("Forest")) {
-    			System.out.println("You Currently have " + player.getGoldAmount() + " Gold and have " + player.getStamina() + "/" + player.getMaxStamina() + " Stamina Left.");
+            	System.out.println("You Currently have " + player.getGoldAmount() + " Gold and have " + player.getStamina() + "/" + player.getMaxStamina() + " Stamina and " + player.getLife() + "/" + player.getMaxLife() + " Life Left.");
             	System.out.println();
             	System.out.println("List of Weapons in your Inventory: ");
             	for(Weapon w : player.getInventory()) {
@@ -258,14 +260,14 @@ public class Game
             	System.out.println("To Hunt type \"hunt <WeaponName>\"");
             	System.out.println();
             } else if(currentRoom.getRoomName().equals("Motel")) {
-            	System.out.println("You Currently have " + player.getGoldAmount() + " Gold and have " + player.getStamina() + "/" + player.getMaxStamina() + " Stamina Left.");
+            	System.out.println("You Currently have " + player.getGoldAmount() + " Gold and have " + player.getStamina() + "/" + player.getMaxStamina() + " Stamina and " + player.getLife() + "/" + player.getMaxLife() + " Life Left.");
             	System.out.println();
             	System.out.println("Do you wanna Nap to restore Stamina or Rest for 5 Gold to Restore Life and Stamina?");
             	System.out.println();
             	System.out.println("To Sleep type \"sleep <Nap/Rest>\"");
             	System.out.println();
             } else if(currentRoom.getRoomName().equals("Armory")) {
-            	System.out.println("You Currently have " + player.getGoldAmount() + " Gold and have " + player.getStamina() + "/" + player.getMaxStamina() + " Stamina Left.");
+            	System.out.println("You Currently have " + player.getGoldAmount() + " Gold and have " + player.getStamina() + "/" + player.getMaxStamina() + " Stamina and " + player.getLife() + "/" + player.getMaxLife() + " Life Left.");
             	System.out.println();
             	System.out.println("List of Weapons in the Armory ");
             	for(Weapon w : blackSmith.getInventory()) {
@@ -275,15 +277,17 @@ public class Game
             	System.out.println("To Buy type \"buy <WeaponName>\"");
             	System.out.println();
             } else if(currentRoom.getRoomName().equals("EnemyRoom") || currentRoom.getRoomName().equals("BossRoom")) {
-            	System.out.println("You Currently have " + player.getGoldAmount() + " Gold and have " + player.getStamina() + "/" + player.getMaxStamina() + " Stamina Left.");
+            	System.out.println("You Currently have " + player.getGoldAmount() + " Gold and have " + player.getStamina() + "/" + player.getMaxStamina() + " Stamina and " + player.getLife() + "/" + player.getMaxLife() + " Life Left.");
             	System.out.println();
-            	System.out.println("List of Weapons in your Inventory: ");
-            	for(Weapon w : player.getInventory()) {
+            	if(!(currentRoom.getRoomName().equals("EnemyRoom" ) && enemy.getLife() <= 0)) {            		
+            		System.out.println("List of Weapons in your Inventory: ");
+            		for(Weapon w : player.getInventory()) {
             			System.out.println("\t " + w.getName() + "(Stamina Cost: " + w.getStaminaCost() + ", MinDamage: " + w.getMinDamage() + ", MaxDamage: " + w.getMaxDamage() + ")");
+            		}
+            		System.out.println();
+            		System.out.println("To Attack type \"attack <WeaponName>\"");
+            		System.out.println();
             	}
-            	System.out.println();
-            	System.out.println("To Attack type \"attack <WeaponName>\"");
-            	System.out.println();
             }
         }
     }
@@ -353,7 +357,7 @@ public class Game
 	    			 player.setLife(player.getMaxLife());
 	    			 player.setGoldAmount(player.getGoldAmount() - 5);
 	    			 motelOwner.setGoldAmount(motelOwner.getGoldAmount() + 5);
-	    			 System.out.println("You're now at " + player.getGoldAmount() + " Gold and have " + player.getStamina() + "/" + player.getMaxStamina() + " Stamina Left.");
+	     			System.out.println("You're now at " + player.getGoldAmount() + " Gold and have " + player.getStamina() + "/" + player.getMaxStamina() + " Stamina and have " + player.getLife() + "/" + player.getMaxLife() + " Life Left." );
     			 } else {
     				 System.out.println("You dont have 5 Gold so you can't Rest");
     			 } 
@@ -416,7 +420,7 @@ public class Game
     			player.setStamina(player.getStamina() - weapon.getStaminaCost());
 
     			if(currentRoom.getRoomName().equals("EnemyRoom")) { 
-    				if((enemy.getLife() - damage)  >= 0) {
+    				if((enemy.getLife() - damage)  > 0) {
     					enemy.setLife(enemy.getLife() - damage);// Enemy takes Damage
     					int damageTaken = enemy.calculateDamage(enemy.getInventory().get(0));
     					System.out.println("You've done " + damage + " damage, the Enemy is now at " + enemy.getLife() + "/" + enemy.getMaxLife() + " life");
@@ -430,9 +434,12 @@ public class Game
     					System.out.println("You Killed the Enemy and won his Weapon and his Gold"); // Killed the Enemy and got WeaponDrop
     					player.getInventory().add(enemy.getInventory().get(0));
     					player.setGoldAmount(player.getGoldAmount() + enemy.getGoldAmount());
+    					currentRoom.setDescription("just passed the Opening where you've slain the Enemy and a Tunnel Opens in front of you.");
+    					Exit tunnel = new Exit(bossRoom, "Tunnel");
+    					currentRoom.addExit(tunnel);
     				}
     			} else if(currentRoom.getRoomName().equals("BossRoom")) { 
-    				if((boss.getLife() - damage)  >= 0) {
+    				if((boss.getLife() - damage)  > 0) {
     					boss.setLife(boss.getLife() - damage);// Boss takes Damage
     					int damageTaken = boss.calculateDamage(boss.getInventory().get(0));
      					System.out.println("You've done " + damage + " damage, the Boss is now at " + boss.getLife() + "/" + boss.getMaxLife() + " life");

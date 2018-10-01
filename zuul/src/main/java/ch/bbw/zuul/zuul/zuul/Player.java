@@ -50,8 +50,8 @@ public class Player {
 			Weapon woodSword = new Weapon("WoodSword", "A badly made Wooden Sword", 2, 4, 3, 5);
 			Weapon stoneSword = new Weapon("StoneSword", "A Stone Sword", 3, 5, 3, 20);
 			Weapon metalSword = new Weapon("MetalSword", "A high quality Metal Sword", 4, 5, 2, 50);
-			Weapon bow = new Weapon("bow", "A weak Bow", 3, 4, 2, 30);
-			Weapon crossBow = new Weapon("crossBow", "A really awesome Crossbow", 3, 4, 1, 70);
+			Weapon bow = new Weapon("Bow", "A weak Bow", 3, 4, 2, 30);
+			Weapon crossBow = new Weapon("CrossBow", "A really awesome Crossbow", 3, 4, 1, 70);
 			
 			inventory.addAll(Arrays.asList(woodSword, stoneSword, metalSword, bow, crossBow));
 		} else if(this.playerType.equals(PlayerType.MotelOwner)) { // the MotelOwner
